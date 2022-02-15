@@ -13,38 +13,51 @@ if [ -f $tablename ]
 	read -a headarr <<< "$header"
 	#echo ${headarr[@]}
 	#echo ${#headarr[@]}
-	typeset -i flag=0
+	typeset -i flag
+	flag=0
+	typeset -i exist=0
+	pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1`  
+	
 	for field in ${headarr[@]}
-	  do
+	do
 		IFS=':'
 		read -a tmparr <<< "$field"
-		echo ${tmparr[@]}
-		echo ${#tmparr[@]}
 		read -e -p ">> Enter the ${tmparr[0]}: " value
 		case ${tmparr[1]} in
-		"int") while [[ $value != +([0-9]) ]]
+		"int") while true
 		do
-		read -e -p ">> Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value
-		  if [[ flag == 0 ]]
-		  then
-			while [[  
-		  fi
+		if [[ $value != +([0-9]) ]]
+		then
+		read -e -p ">> Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
+		continue
+		fi
+		for i in $pkvalues
+			do 
+			if [[ $value==$i ]]
+			then 
+			echo "value=$value"
+			flag=1
+			echo "Not Unique value ..."
+			break 2
+			fi
+			done
 		done 
 		;;
 		"string") while [[ $value != +([A-Za-z0-9]) ]]
-		do 
+		do
 		read -e -p ">> Enter valid ${tmparr[0]}: " value
 		done
 		;;
 		*) echo "default"
 		;;
 		esac
+		flag=1
 		echo -n $value"," >> $tablename
-	  done
-	  echo -n $'\n' >> $tablename
-	  echo "Data inserted successfully"
+	done
+	echo -n $'\n' >> $tablename
+	echo "Data inserted successfully"
 	#awk -F"| {if(NR==2) for ( i=1; i<NF; i++) print $i | } $tablename
     else
 	echo Table Doesnot exist
-fi
+ fi
 }

@@ -1,0 +1,27 @@
+read -e -p ">> Table name: " tablename#!/bin/bash
+
+function insertIntoTable {
+read -e -p ">> Table name: " tablename
+
+if [ -f $tablename ]
+    then
+	header=`(sed -n '2p' $tablename)`
+	#echo $header
+	IFS='|'
+	read -a headarr <<< "$header"
+	#echo ${headarr[@]}
+	#echo ${#headarr[@]}
+	for field in ${headarr[@]}
+	  do
+		IFS=':'
+		read -a tmparr <<< "$field"
+		echo ${tmparr[@]}
+		echo ${#tmparr[@]}
+echo "Please Enter the ${tmparr[1]}: "
+
+	  done
+	#awk -F"| {if(NR==2) for ( i=1; i<NF; i++) print $i | } $tablename
+    else
+	echo Table Doesnot exist
+fi
+}
