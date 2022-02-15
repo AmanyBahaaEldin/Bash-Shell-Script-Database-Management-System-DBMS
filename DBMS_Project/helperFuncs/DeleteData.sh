@@ -1,24 +1,24 @@
 #!/bin/bash
 
-
-function SelectData {
-    PS3="select data>> "
+function deleteData {
+    PS3=">>>> "
     read -e -p ">> Table name: " tablename
+
     if [ -f $tablename ]
     then
-        select option in "all" "by primaryKey"
+    select option in "all" "by primaryKey"
         do
         case $REPLY in
-        1) sed '1,2d' $tablename | column -t -o "|" -s ","
+        1) sed -i '3,$d' $tablename
            ;;
         2) read -e -p ">> key: " val
-           echo | awk -F"," -v VARIABLE=$val '{ if(NR>=2 && $1==VARIABLE)  print $0 }' $tablename | column -t -o "|" -s ","
+           awk -F"," -v VARIABLE=$val '{ if($1!=VARIABLE) print }' $tablename > tmpfile && mv tmpfile $tablename
            ;;
          *) echo "Invalid Option"
            ;;
         esac
         done
-   else
+    else
     echo "File Does not exist"
 
     fi
