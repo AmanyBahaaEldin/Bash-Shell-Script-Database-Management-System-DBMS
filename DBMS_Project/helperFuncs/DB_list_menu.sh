@@ -3,6 +3,7 @@
 
 source $1/helperFuncs/createTable.sh       #$1 -> to can go to the path
 source $1/helperFuncs/insertData.sh
+source $1/helperFuncs/selectData.sh
 function DB_List {
         echo -e "=============== $1 DB ====================== \n"    #$1 -> to change ps3 with database name
         COLUMNS=50
@@ -17,8 +18,10 @@ function DB_List {
         3) read -e -p ">> Table name: " name
            rm $name
            ;;
-	4) insertIntoTable
-	   ;;
+	     4) insertIntoTable
+	        ;;
+         5) SelectData
+           ;;
          *) echo "Invalid Option"
            ;;
         esac
