@@ -8,15 +8,9 @@ read -e -p ">> Table name: " tablename
 if [ -f $tablename ]
     then
 	header=`(sed -n '2p' $tablename)`
-	#echo $header
 	IFS='|'
 	read -a headarr <<< "$header"
-	#echo ${headarr[@]}
-	#echo ${#headarr[@]}
-	typeset -i flag
-	flag=0
-	typeset -i exist=0
-	pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1`  
+	
 	
 	for field in ${headarr[@]}
 	do
@@ -26,27 +20,53 @@ if [ -f $tablename ]
 		case ${tmparr[1]} in
 		"int") while true
 		do
+		echo entered intcase
+		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1`  
 		if [[ $value != +([0-9]) ]]
 		then
 		read -e -p ">> Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
 		continue
 		fi
-		for i in $pkvalues
+		
+		for PK in $pkvalues
 			do 
-			if [[ $value==$i ]]
+			echo $pkvalues
+			if [[ $value == $PK ]]
 			then 
 			echo "value=$value"
-			flag=1
-			echo "Not Unique value ..."
-			break 2
+			read -e -p ">> $value exists Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
+		    continue 2
 			fi
 			done
+		break
 		done 
 		;;
-		"string") while [[ $value != +([A-Za-z0-9]) ]]
+		"string") while true
 		do
-		read -e -p ">> Enter valid ${tmparr[0]}: " value
-		done
+		echo entered strcase
+		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1`  
+		if [[ $value != +([A-Za-z0-9]) ]]
+		then
+		read -e -p ">> Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
+		continue
+		fi
+		
+		for PK in $pkvalues
+			do 
+			echo $pkvalues
+			if [[ $value == $PK ]]
+			then 
+			echo "value=$value"
+			read -e -p ">> $value exists Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
+		    continue 2
+			fi
+			done
+		break
+		done 
+		# while [[ $value != +([A-Za-z0-9]) ]]
+		# do
+		# read -e -p ">> Enter valid ${tmparr[0]}: " value
+		# done
 		;;
 		*) echo "default"
 		;;
