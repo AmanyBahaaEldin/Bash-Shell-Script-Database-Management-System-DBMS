@@ -3,7 +3,6 @@
 function createTable {
     typeset -i N_col
     typeset -i iter
-    # DataType_arr=(int string)
     
     read -e -p ">> Table name: " name
     

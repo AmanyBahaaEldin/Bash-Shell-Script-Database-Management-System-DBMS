@@ -1,0 +1,5 @@
+Table Name:amany|Number of Columns:3
+id:int|name:string|salary:int|
+1,zahra,15000,
+2,amany,100000,
+3,amany,100000000000000,
