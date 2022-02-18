@@ -8,10 +8,10 @@ read -e -p ">> Table name: " tablename
 if [ -f $tablename ]
     then
 	header=`(sed -n '2p' $tablename)`
-	declare -a record
 	IFS='|'
 	read -a headarr <<< "$header"
 	flag=1
+	declare -a record
 	typeset -i index=0
 	for field in ${headarr[@]}
 	do

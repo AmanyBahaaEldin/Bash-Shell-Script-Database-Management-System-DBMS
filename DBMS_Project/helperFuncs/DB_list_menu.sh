@@ -28,9 +28,9 @@ function DB_List {
            ;;
 	     4) insertIntoTable
 	        ;;
-         5) SelectData
+         5) SelectData $1
            ;;
-         6) deleteData
+         6) deleteData $1
            ;; 
          7) clear
          mainDBMSMenu $dataBaseDIR
