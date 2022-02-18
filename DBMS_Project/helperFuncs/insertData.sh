@@ -8,10 +8,11 @@ read -e -p ">> Table name: " tablename
 if [ -f $tablename ]
     then
 	header=`(sed -n '2p' $tablename)`
+	declare -a record
 	IFS='|'
 	read -a headarr <<< "$header"
 	flag=1
-	
+	typeset -i index=0
 	for field in ${headarr[@]}
 	do
 		IFS=':'
@@ -20,7 +21,6 @@ if [ -f $tablename ]
 		case ${tmparr[1]} in
 		"int") while true
 		do
-		echo entered intcase
 		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $value`  
 		if [[ $value != +([0-9]) ]]
 		then
@@ -40,16 +40,15 @@ if [ -f $tablename ]
 		"string") while true
 		do
 		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $value`  
-		echo "PK="$pkvalues
 		if [[ $value != +([A-Za-z0-9]) ]]
 		then
-		read -e -p ">> Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
+		read -e -p "\e[1;31m>> Enter valid ${tmparr[0]} must be ${tmparr[1]}: \e[0m" value 
 		continue
 		fi
 		
 		if [[ $value == $pkvalues && $flag == 1 ]]
 		then
-		read -e -p ">> $value exists Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
+		read -e -p "\e[1;31m>> $value exists Enter valid ${tmparr[0]} must be ${tmparr[1]}: \e[0m" value 
 		continue
 		fi
 		break
@@ -59,11 +58,17 @@ if [ -f $tablename ]
 		;;
 		esac
 		flag=5
-		echo -n $value"," >> $tablename
+		record[index]=$value
+		index=$index+1
+		echo "record array : ${record[@]}"
+	done
+	for item in ${record[@]}
+	do
+	echo -n $item"," >> $tablename
 	done
 	echo -n $'\n' >> $tablename
-	echo "Data inserted successfully"
+	echo -e "\e[1;32m Data inserted successfully \e[0m"
     else
-	echo Table Doesnot exist
+	echo -e "\e[1;31m $name table doesn't exist \e[0m"
  fi
 }

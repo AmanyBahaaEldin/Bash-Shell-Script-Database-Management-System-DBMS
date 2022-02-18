@@ -14,12 +14,12 @@ function SelectData {
         2) read -e -p ">> key: " val
            echo | awk -F"," -v VARIABLE=$val '{ if(NR>=2 && $1==VARIABLE)  print $0 }' $tablename | column -t -o "|" -s ","
            ;;
-         *) echo "Invalid Option"
+         *) echo -e "\e[1;33m Invalid Option\e[0m"
            ;;
         esac
         done
    else
-    echo "File Does not exist"
+    echo -e "\e[1;33mFile Does not exist\e[0m"
 
     fi
 }
