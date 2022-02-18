@@ -41,7 +41,7 @@ if [ -f $tablename ]
 		do
 		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $value`  
 		echo "PK="$pkvalues
-		if [[ $value != +([A-Za-z0-9])) ]]
+		if [[ $value != +([A-Za-z0-9]) ]]
 		then
 		read -e -p ">> Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
 		continue

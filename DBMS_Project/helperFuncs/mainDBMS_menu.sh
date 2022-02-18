@@ -5,7 +5,7 @@ function mainDBMSMenu {
         echo -e "================== My DBMS ====================== \n"
         PS3=$'\n>>DBMS '
         COLUMNS=50
-        select choice in " Create Database" " List Databases" " Connect to Database" " Drop Database"
+        select choice in " Create Database" " List Databases" " Connect to Database" " Drop Database" " Exit"
         do
             case $REPLY in 
                 1) read -e -p "Database name: " name
@@ -26,6 +26,8 @@ function mainDBMSMenu {
                 ;;
                 4) read -e -p "Database name: " name
                 rm -r $1/$name
+                ;;
+                5) exit
                 ;;
                 *) echo "Invalid Option"
                 ;;
