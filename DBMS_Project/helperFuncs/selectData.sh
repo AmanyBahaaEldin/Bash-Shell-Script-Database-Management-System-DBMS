@@ -22,17 +22,17 @@ function SelectData {
         do
         case $REPLY in
         1) 
-            echo $'\n'${headarr[@]} | column -t -c -o "   |   "
+            echo $'\n'${headarr[@]} | column -t  -o "   |   "
             echo "-----------------------------------------------------"
             sed '1,2d' $tablename | column -t -s "," -o "   |   " 
            ;;
         2) read -e -p ">> key: " val
-        var=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $val`
         if [ -z "$val" ]
         then 
         echo -e "\e[1;31m the key must not be empty ...\e[0m"
-        elif [ -z "$var" ] 
+        elif [[ ! (-z "$val") ]] 
         then
+         var=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $val` 
          echo "Not existed try again"
          else
          echo "${headarr[@]}" | column -t -o "   |   "
@@ -50,6 +50,6 @@ function SelectData {
         esac
         done
    else
-    echo -e "\e[1;31mFile Does not exist\e[0m"
+    echo -e "\e[1;31mTable Does not exist\e[0m"
     fi
 }

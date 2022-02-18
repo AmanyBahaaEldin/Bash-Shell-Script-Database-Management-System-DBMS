@@ -6,7 +6,7 @@ source $1/helperFuncs/insertData.sh
 source $1/helperFuncs/selectData.sh
 source $1/helperFuncs/DeleteData.sh
 function DB_List {
-        dataBaseDIR=`pwd`/DataBases
+        
         echo -e "\e[1;34m\n =============== $1 DB ====================== \e[0m\n"    #$1 -> to change ps3 with database name
         COLUMNS=50
         PS3=$'\n\u001b[31m'">> $1: "$'\u001b[0m'
@@ -32,7 +32,9 @@ function DB_List {
            ;;
          6) deleteData $1
            ;; 
-         7) clear
+         7) clear;
+         cd ../../ ;
+         dataBaseDIR=`pwd`/DataBases;
          mainDBMSMenu $dataBaseDIR
          ;;
          8) exit
