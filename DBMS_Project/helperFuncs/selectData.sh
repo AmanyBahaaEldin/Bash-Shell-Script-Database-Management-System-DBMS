@@ -6,6 +6,7 @@ function SelectData {
     read -e -p ">> Table name: " tablename
     if [ -f $tablename ]
     then
+    
     typeset -i index=0
       header=`(sed -n '2p' $tablename)`
       IFS='|'
@@ -17,30 +18,38 @@ function SelectData {
          headarr[index]=${tmparr[0]}
          index=$index+1
          done
-        echo ${headarr[@]}
         select option in " All" " by primaryKey" "Back" "Exit"
         do
         case $REPLY in
         1) 
-            echo "\n${headarr[@]}" | column -t
+            echo $'\n'${headarr[@]} | column -t -c -o "   |   "
             echo "-----------------------------------------------------"
-            sed '1,2d' $tablename | column -t -s "," 
+            sed '1,2d' $tablename | column -t -s "," -o "   |   " 
            ;;
         2) read -e -p ">> key: " val
-        echo "\n${headarr[@]}" | column -t
-           echo | awk -F"," -v VARIABLE=$val '{ if(NR>=2 && $1==VARIABLE)  print $0 }' $tablename | column -t -s ","
-           ;;
+        var=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $val`
+        if [ -z "$val" ]
+        then 
+        echo -e "\e[1;31m the key must not be empty ...\e[0m"
+        elif [ -z "$var" ] 
+        then
+         echo "Not existed try again"
+         else
+         echo "${headarr[@]}" | column -t -o "   |   "
+         echo "-----------------------------------------------------"
+         echo | awk -F"," -v VARIABLE=$val '{ if(NR>=2 && $1==VARIABLE)  print $0 }' $tablename | column -t -s "," -o "   |   "
+         fi
+         ;;
          3) clear
             DB_List $1
             ;;
          4) exit
          ;; 
-         *) echo -e "\e[1;33m Invalid Option\e[0m"
+         *) echo -e "\e[1;31m Invalid Option\e[0m"
            ;;
         esac
         done
    else
-    echo -e "\e[1;33mFile Does not exist\e[0m"
-
+    echo -e "\e[1;31mFile Does not exist\e[0m"
     fi
 }

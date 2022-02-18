@@ -18,17 +18,28 @@ if [ -f $tablename ]
 		IFS=':'
 		read -a tmparr <<< "$field"
 		read -e -p ">> Enter the ${tmparr[0]}: " value
+		
 		case ${tmparr[1]} in
 		"int") while true
 		do
-		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $value`  
+		if [ -z "$value" ]
+		then
+			if [[ $flag == 1 ]]
+			then 
+				echo -e "\e[1;31m Primary key must be not NULL \e[0m"
+				read -e -p ">> Enter the ${tmparr[0]}: " value
+				continue
+			fi
+		fi
+		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1 | grep "^${value}$"`
+		 
 		if [[ $value != +([0-9]) ]]
 		then
 		read -e -p ">> Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
 		continue
 		fi
-
-		if [[ $value == $pkvalues && $flag == 1 ]]
+		
+		if [[ ! (-z $pkvalues)  && $flag == 1 ]]
 		then
 		read -e -p ">> $value exists Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
 		continue
@@ -39,16 +50,26 @@ if [ -f $tablename ]
 		;;
 		"string") while true
 		do
-		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1 | grep $value`  
+		if [ -z "$value" ]
+		then
+			if [[ $flag == 1 ]]
+			then 
+				echo -e "\e[1;31m Primary key must be not NULL \e[0m"
+				read -e -p ">> Enter the ${tmparr[0]}: " value
+				continue
+			fi
+		fi
+		pkvalues=`sed '1,2d' $tablename |cut -d "," -f 1 | grep "^${value}$"`  
+		echo "pkvalues=  "$pkvalues
 		if [[ $value != +([A-Za-z0-9]) ]]
 		then
 		read -e -p "\e[1;31m>> Enter valid ${tmparr[0]} must be ${tmparr[1]}: \e[0m" value 
 		continue
 		fi
 		
-		if [[ $value == $pkvalues && $flag == 1 ]]
+		if [[ ! (-z $pkvalues) && $flag == 1 ]]
 		then
-		read -e -p "\e[1;31m>> $value exists Enter valid ${tmparr[0]} must be ${tmparr[1]}: \e[0m" value 
+		read -e -p ">> $value exists Enter valid ${tmparr[0]} must be ${tmparr[1]}: " value 
 		continue
 		fi
 		break
@@ -60,7 +81,7 @@ if [ -f $tablename ]
 		flag=5
 		record[index]=$value
 		index=$index+1
-		echo "record array : ${record[@]}"
+		
 	done
 	for item in ${record[@]}
 	do
