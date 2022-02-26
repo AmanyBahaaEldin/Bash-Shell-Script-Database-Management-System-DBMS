@@ -18,12 +18,17 @@ function DB_List {
         2) ls
            ;;
         3) read -e -p ">> Table name: " name
-         if [ -f $name ]
-         then
-           rm $name
-           echo -e "\e[1;32m $name table dropped successfully \e[0m"
-         else 
-         echo -e "\e[1;31m $name table doesn't exist \e[0m"
+         if [ -z "$name" ]
+         then 
+          echo -e "\e[1;31m Please enter correct Table name ...\e[0m"
+         else
+            if [ -f $name ]
+            then
+              rm $name
+              echo -e "\e[1;32m $name table dropped successfully \e[0m"
+            else 
+            echo -e "\e[1;31m $name table doesn't exist \e[0m"
+            fi
          fi
            ;;
 	     4) insertIntoTable
